@@ -1,12 +1,10 @@
 
 const cityJson = require('./../citylist.json');
 export let citiesList = cityJson.map(item => {
-  var myObj = {};
-  
-  myObj['value'] = item['name'];
-  myObj['country'] = item['country'];
-  return myObj;
-})
+  var obj = {};
 
-console.log(citiesList[20])
+  obj['value'] = item['name'];
+  obj['country'] = item['country'];
+  return obj;
+})
 
