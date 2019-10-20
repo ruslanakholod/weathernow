@@ -140,6 +140,7 @@ const styles = {
 
   app__search__wrapper: css`
     position: relative;
+    width: 100%;
   `,
 
   app__search: css`
@@ -153,6 +154,7 @@ const styles = {
     outline: none;
 
     @media (max-width: 767px) {
+      max-width: 100%;
       font-size: 25px;
     }
   `,
@@ -164,12 +166,16 @@ const styles = {
     border-top: 0;
     border-left: 1px solid black;
     border-right: 1px solid black;
-    border-bottom: 1px solid black;
+    border-bottom: 0;
     font-size: 18px;
 
     li {
       border: 1px solid black;
       padding: 5px 10px;
+    }
+
+    li:last-of-type {
+      border-bottom: 2px solid black;
     }
   `
 }
