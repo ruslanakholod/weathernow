@@ -16,6 +16,8 @@ class App extends React.Component {
     sunset: undefined,
     sunrise: undefined,
     conditions: undefined,
+    humidity: undefined,
+    pressure: undefined,
 
     cities: citiesList
   }
@@ -26,11 +28,13 @@ class App extends React.Component {
     const country = selection.country;
 
     if (city) {
-      const API_URL = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&APPID=${API_KEY}&units=metric`);
+      const API_URL = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&APPID=${API_KEY}`);
       const data = await API_URL.json();
       let sunrise = data.sys.sunrise;
       let sunset = data.sys.sunset;
-      let conditions = data.weather[0]['main']
+      let conditions = data.weather[0]['main'];
+      let humidity = data.main.humidity;
+      let pressure = data.main.pressure;
 
       let date_rise = new Date(sunrise * 1000);
       let date_set = new Date(sunset * 1000);
@@ -44,7 +48,9 @@ class App extends React.Component {
         country: data.sys.country,
         sunset: sunset_date,
         sunrise: sunrise_date,
-        conditions: conditions
+        conditions: conditions,
+        humidity: humidity,
+        pressure: Math.round(pressure)
       });
     }
 
@@ -55,13 +61,13 @@ class App extends React.Component {
 
     return (
       <div className={styles.app}>
-        <div className={styles.app__search__wrapper} >
+        <div className={styles.app__wrapper} >
           <p className={styles.app__title}>WeatherNow</p>
           <Downshift
             onChange={selection => this.getWeather(selection)}
             itemToString={item => (item ? item.value : "")} >
             {({ getInputProps, getItemProps, getMenuProps, isOpen, inputValue, highlightedIndex, selectedItem }) => (
-              <div>
+              <div className={styles.app__search__wrapper} >
                 <input className={styles.app__search} placeholder='City' {...getInputProps()} />
                 <ul className={styles.app__search__list} {...getMenuProps()}>
                   {isOpen ? this.state.cities
@@ -71,8 +77,7 @@ class App extends React.Component {
                         key: index, index, item,
                         style: { backgroundColor: highlightedIndex === index ? "lightgray" : "white", fontWeight: selectedItem === item ? "bold" : "normal" }
                       })} >
-                        {item.value} ,
-                          {item.country}
+                        {item.value} ({item.country})
                       </li>
                     ))
                     : null}
@@ -88,6 +93,8 @@ class App extends React.Component {
           sunset={this.state.sunset}
           sunrise={this.state.sunrise}
           conditions={this.state.conditions}
+          humidity={this.state.humidity}
+          pressure={this.state.pressure}
         />
       </div>
     )
@@ -126,16 +133,20 @@ const styles = {
     }
   `,
 
-  app__search__wrapper: css`
+  app__wrapper: css`
     display: flex;
     flex-wrap: wrap;
+  `,
+
+  app__search__wrapper: css`
+    position: relative;
   `,
 
   app__search: css`
     max-width: 600px;
     width: 100%;
     padding: 10px 20px;
-    margin: 30px auto;
+    margin: 30px auto 0 auto;
     font-size: 30px;
     border: 0;
     border-bottom: 2px solid black;
@@ -145,4 +156,20 @@ const styles = {
       font-size: 25px;
     }
   `,
+
+  app__search__list: css`
+    position: absolute;
+    width: 100%;
+    list-style: none;
+    border-top: 0;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    font-size: 18px;
+
+    li {
+      border: 1px solid black;
+      padding: 5px 10px;
+    }
+  `
 }
