@@ -135,12 +135,18 @@ const styles = {
 
   app__wrapper: css`
     display: flex;
-    flex-wrap: wrap;
+    
+    @media (max-width: 767px) {
+      flex-direction: column;
+    }
   `,
 
   app__search__wrapper: css`
     position: relative;
-    width: 100%;
+
+    @media (max-width: 767px) {
+      width: 100%;
+    }
   `,
 
   app__search: css`
