@@ -3,6 +3,8 @@ import Weather from './Components/Weather';
 import { citiesList } from './Components/CitiesList';
 import Downshift from 'downshift'
 import { css, injectGlobal } from 'emotion';
+import { withRouter } from "react-router";
+import queryString from 'query-string';
 
 
 const API_KEY = '2f9bf7dfeb836a758792106fef8a46f7';
@@ -22,11 +24,16 @@ class App extends React.Component {
     cities: citiesList
   }
 
-  getWeather = async (selection) => {
+  componentDidMount() {
+    const parsed = queryString.parse(this.props.location.search);
+    this.getWeather(parsed)
+  }
 
+  getWeather = async (selection) => {
     const city = selection.value;
     const country = selection.country;
 
+    this.props.history.push(`/?value=${city}&country=${country}`)
     if (city) {
       const API_URL = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&APPID=${API_KEY}`);
       const data = await API_URL.json();
@@ -101,7 +108,7 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);
 
 injectGlobal`
         
