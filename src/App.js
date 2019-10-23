@@ -26,7 +26,10 @@ class App extends React.Component {
 
   componentDidMount() {
     const parsed = queryString.parse(this.props.location.search);
-    this.getWeather(parsed)
+
+    if (this.props.location.search) {
+      this.getWeather(parsed)
+    }
   }
 
   getWeather = async (selection) => {
